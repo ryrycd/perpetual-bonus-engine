@@ -10,7 +10,7 @@ class_name = "Rotator"
 
 [[migrations]]
 tag = "v1"
-new_classes = ["Rotator"]
+new_sqlite_classes = ["Rotator"]
 
 [vars]
 ALLOWED_ORIGIN = "*"
