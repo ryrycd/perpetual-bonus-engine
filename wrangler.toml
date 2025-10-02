@@ -12,15 +12,6 @@ class_name = "Rotator"
 tag = "v1"
 new_classes = ["Rotator"]
 
-[[d1_databases]]
-binding = "DB"
-database_name = "pbe_db"
-database_id = "pbe_db"
-
-[[r2_buckets]]
-binding = "PROOF_BUCKET"
-bucket_name = "pbe-proofs"
-
 [vars]
 ALLOWED_ORIGIN = "*"
 OPERATOR_PHONE = "+15555550123"
