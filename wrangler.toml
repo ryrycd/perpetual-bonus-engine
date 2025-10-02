@@ -1,4 +1,4 @@
-name = "perpetual-bonus-engine"
+name = "perpetual-bonus-engine-2"
 main = "src/worker.js"
 compatibility_date = "2025-10-02"
 
