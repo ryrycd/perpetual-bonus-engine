@@ -1,4 +1,4 @@
-import { Rotator } from "./rotator.js";
+// src/worker.js
 
 const JSONH = { "Content-Type": "application/json" };
 const ok = (obj) => new Response(JSON.stringify(obj), { status: 200, headers: JSONH });
@@ -66,7 +66,6 @@ export default {
 
     if (url.pathname === "/hooks/telnyx" && req.method === "POST") {
       const payload = await readJSON(req);
-      const evt = payload?.data?.event_type || "";
       const p = payload?.data?.payload || {};
       const from = p?.from?.phone_number;
       const textRaw = (p?.text || "").trim();
@@ -95,9 +94,7 @@ export default {
 
       if (hasMedia && lead.state === "awaiting_proof") {
         const mediaUrl = p.media[0].url;
-        const res = await fetch(mediaUrl, {
-          headers: { "Authorization": `Bearer ${env.TELNYX_API_KEY}` }
-        });
+        const res = await fetch(mediaUrl, { headers: { "Authorization": `Bearer ${env.TELNYX_API_KEY}` } });
         if (!res.ok) {
           await sendSMS(env, from, "We couldn’t read your image—please resend.");
           return cors(ok({ ok:false }), env);
@@ -150,7 +147,8 @@ export default {
     }
 
     return env.ASSETS.fetch(req);
-  },
-
-  async durableObjects() { return { Rotator }; }
+  }
 };
+
+// Re-export the Durable Object so it’s visible to the runtime bundle
+export { Rotator } from "./rotator.js";
