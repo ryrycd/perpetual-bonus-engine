@@ -1,0 +1,34 @@
+name = "perpetual-bonus-engine"
+main = "src/worker.js"
+compatibility_date = "2025-10-02"
+
+assets = { directory = "./public" }
+
+[[durable_objects.bindings]]
+name = "ROTATOR_DO"
+class_name = "Rotator"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["Rotator"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "pbe_db"
+database_id = "pbe_db"
+
+[[r2_buckets]]
+binding = "PROOF_BUCKET"
+bucket_name = "pbe-proofs"
+
+[vars]
+ALLOWED_ORIGIN = "*"
+OPERATOR_PHONE = "+15555550123"
+
+TEMPLATE_INTRO = "Hey, it’s Ryan 👋 Here’s your Acorns link: {{LINK}}\nSteps: 1) Sign up 2) Deposit $5 3) Reply DONE here."
+TEMPLATE_ASK_PROOF = "Nice! Reply to this text with a screenshot (MMS) showing your $5 deposit/confirmation."
+TEMPLATE_VERIFIED = "Verified ✅ Thanks! You’ll get your payout shortly."
+TEMPLATE_OPERATOR = "NEW VERIFIED: {{PHONE}} / {{HANDLE}}\nLink: {{LINK}}\nProof: {{URL}}"
+
+TELNYX_PUBLIC_KEY = ""
+ADMIN_KEY = "change-me"

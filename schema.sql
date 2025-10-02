@@ -1,0 +1,43 @@
+CREATE TABLE IF NOT EXISTS links (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  url TEXT NOT NULL,
+  threshold INTEGER NOT NULL,
+  verified_count INTEGER NOT NULL DEFAULT 0,
+  position INTEGER NOT NULL,
+  active INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_links_position ON links(position);
+
+CREATE TABLE IF NOT EXISTS leads (
+  id TEXT PRIMARY KEY,
+  phone TEXT NOT NULL,
+  handle TEXT NOT NULL,
+  assigned_link_id INTEGER NOT NULL,
+  state TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(assigned_link_id) REFERENCES links(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_leads_phone ON leads(phone);
+
+CREATE TABLE IF NOT EXISTS verifications (
+  id TEXT PRIMARY KEY,
+  lead_id TEXT NOT NULL,
+  media_key TEXT NOT NULL,
+  media_url TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(lead_id) REFERENCES leads(id)
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+  id TEXT PRIMARY KEY,
+  phone TEXT NOT NULL,
+  direction TEXT NOT NULL,
+  text TEXT,
+  has_media INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);

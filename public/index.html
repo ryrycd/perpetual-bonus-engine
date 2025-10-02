@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Acorns Bonus — Ryan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    .card { backdrop-filter: blur(10px); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); }
+    .gradient { background: radial-gradient(1200px 800px at 50% -10%, #23C4832b, transparent), linear-gradient(180deg, #0b0f14, #0b0f14); }
+  </style>
+</head>
+<body class="gradient min-h-screen text-white">
+  <div class="max-w-md mx-auto px-5 py-14">
+    <header class="mb-10 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs uppercase tracking-wide">Secure • Simple • Fast</div>
+      <h1 class="mt-5 text-3xl font-extrabold">Get your Acorns bonus</h1>
+      <p class="mt-2 text-white/70">Sign up, deposit $5, and I’ll send you a bonus—on me.</p>
+    </header>
+
+    <main id="app" class="card rounded-2xl p-6">
+      <div id="step1">
+        <label class="block text-sm font-semibold mb-2">Phone number</label>
+        <input id="phone" type="tel" placeholder="+1 617 555 0123"
+          class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400"
+        />
+        <button id="next1" class="mt-4 w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">Continue</button>
+        <p class="mt-3 text-xs text-white/60">We’ll text you the referral link. Standard SMS/MMS rates may apply.</p>
+      </div>
+
+      <div id="step2" class="hidden">
+        <label class="block text-sm font-semibold mb-2">Venmo/Zelle handle</label>
+        <input id="handle" type="text" placeholder="@yourhandle or email"
+          class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400"
+        />
+        <button id="submit" class="mt-4 w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">Get my link</button>
+        <button id="back1" class="mt-2 w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold">Back</button>
+      </div>
+
+      <div id="step3" class="hidden text-center">
+        <div class="text-2xl">📲</div>
+        <h2 class="mt-2 text-xl font-bold">Check your texts</h2>
+        <p class="mt-2 text-white/70">I just sent you the referral link and quick instructions.</p>
+      </div>
+    </main>
+
+    <footer class="mt-8 text-center text-xs text-white/60">Protected & private • Never shared</footer>
+  </div>
+
+  <script>
+    const phoneEl = document.getElementById('phone');
+    const handleEl = document.getElementById('handle');
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const next1 = document.getElementById('next1');
+    const submit = document.getElementById('submit');
+    const back1 = document.getElementById('back1');
+
+    function isE164(s) { return /^\+?[1-9]\d{7,14}$/.test(s); }
+
+    next1.onclick = () => {
+      const p = phoneEl.value.trim();
+      if (!isE164(p)) { alert("Please enter a valid phone in E.164 format (e.g., +16175550123)"); return; }
+      step1.classList.add('hidden'); step2.classList.remove('hidden');
+    };
+    back1.onclick = () => { step2.classList.add('hidden'); step1.classList.remove('hidden'); };
+
+    submit.onclick = async () => {
+      const phone = phoneEl.value.trim();
+      const handle = handleEl.value.trim();
+      if (!handle || handle.length < 3) { alert("Please enter your Venmo/Zelle handle."); return; }
+      try {
+        const r = await fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, handle })
+        });
+        const j = await r.json();
+        if (!j.ok) throw new Error(j.error || 'Failed');
+        step2.classList.add('hidden'); step3.classList.remove('hidden');
+      } catch (e) {
+        alert("Sorry, something went wrong. Please try again.");
+      }
+    };
+  </script>
+</body>
+</html>
